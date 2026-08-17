@@ -34,12 +34,14 @@
             --color-button-text: #ffffff;
             --color-pink-accent: #f8dbdf;
             --font-family: 'DM Sans', sans-serif;
+            --apple-ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -66,13 +68,16 @@
         header {
             position: sticky;
             top: 0;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 1000;
             border-bottom: 1px solid var(--color-border);
             padding: 15px 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            transition: padding 0.3s var(--apple-ease);
         }
 
         .logo {
@@ -96,14 +101,14 @@
             font-weight: 500;
             font-size: 14px;
             text-transform: uppercase;
-            transition: color 0.2s;
+            transition: color 0.2s ease;
         }
 
         .nav-links a:hover {
             color: var(--color-primary);
         }
 
-        /* Hero Section - CORREGIDO A Hero.png */
+        /* Hero Section */
         .hero {
             position: relative;
             width: 100%;
@@ -119,6 +124,13 @@
             color: #fff;
         }
 
+        /* Parallax para Laptops */
+        @media (min-width: 769px) {
+            .hero {
+                background-attachment: fixed;
+            }
+        }
+
         .hero-overlay {
             position: absolute;
             inset: 0;
@@ -130,6 +142,18 @@
             z-index: 1;
             max-width: 800px;
             padding: 20px;
+            animation: heroFadeIn 1s var(--apple-ease) forwards;
+        }
+
+        @keyframes heroFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .hero-title {
@@ -157,7 +181,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             border-radius: 4px;
-            transition: all 0.3s ease;
+            transition: transform 0.3s var(--apple-ease), background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
             border: 2px solid #fff;
             cursor: pointer;
         }
@@ -165,6 +189,25 @@
         .btn:hover {
             background-color: transparent;
             color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Scroll Reveal Utility Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(35px);
+            transition: opacity 0.8s var(--apple-ease), transform 0.8s var(--apple-ease);
+            will-change: opacity, transform;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Section Title Common */
@@ -199,8 +242,14 @@
             background: #fff;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             text-align: center;
+            transition: transform 0.4s var(--apple-ease), box-shadow 0.4s var(--apple-ease);
+        }
+
+        .review-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
         }
 
         .stars {
@@ -253,6 +302,11 @@
             border-radius: 12px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             object-fit: cover;
+            transition: transform 0.6s var(--apple-ease);
+        }
+
+        .menu-img-wrap img:hover {
+            transform: scale(1.02);
         }
 
         .menu-content-wrap {
@@ -274,33 +328,42 @@
             color: #444;
         }
 
-        /* Modal Styles */
+        /* Modal Styles con Glassmorphism Top */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
             z-index: 9999;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            transition: opacity 0.4s var(--apple-ease), backdrop-filter 0.4s var(--apple-ease), visibility 0.4s var(--apple-ease);
         }
 
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .modal-content {
             position: relative;
             max-width: 95%;
             max-height: 95vh;
+            transform: scale(0.92);
+            transition: transform 0.4s var(--apple-ease);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
         }
 
         .modal-img {
@@ -309,11 +372,12 @@
             object-fit: contain;
             cursor: zoom-out;
             border-radius: 8px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
         }
 
         .modal-close {
             position: absolute;
-            top: -40px;
+            top: -45px;
             right: 0;
             background: none;
             border: none;
@@ -321,11 +385,12 @@
             font-size: 36px;
             line-height: 1;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
 
         .modal-close:hover {
             color: var(--color-primary);
+            transform: scale(1.1);
         }
 
         /* Our Story Section */
@@ -353,6 +418,11 @@
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             object-fit: cover;
+            transition: transform 0.6s var(--apple-ease);
+        }
+
+        .story-img:hover {
+            transform: scale(1.02);
         }
 
         .story-content {
@@ -391,12 +461,17 @@
             position: relative;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+            transition: transform 0.4s var(--apple-ease), box-shadow 0.4s var(--apple-ease);
         }
 
         .category-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 16px 35px rgba(0,0,0,0.12);
+        }
+
+        .category-card:active {
+            transform: scale(0.97);
         }
 
         .category-card img {
@@ -404,6 +479,11 @@
             height: 350px;
             object-fit: cover;
             display: block;
+            transition: transform 0.6s var(--apple-ease);
+        }
+
+        .category-card:hover img {
+            transform: scale(1.05);
         }
 
         .category-info {
@@ -446,6 +526,11 @@
             width: 100%;
             border-radius: 12px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.6s var(--apple-ease);
+        }
+
+        .order-img-wrap img:hover {
+            transform: scale(1.02);
         }
 
         .order-content {
@@ -475,6 +560,7 @@
         .btn-dark:hover {
             background-color: transparent;
             color: #000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
         /* Footer */
@@ -512,12 +598,13 @@
             border: 1px solid rgba(255,255,255,0.3);
             padding: 8px 18px;
             border-radius: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.3s var(--apple-ease);
         }
 
         .social-links a:hover {
             background: #fff;
             color: #000;
+            transform: translateY(-2px);
         }
 
         .footer-copy {
@@ -557,6 +644,14 @@
                 z-index: 10000;
             }
         }
+
+        /* Reducción de movimiento accesible */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -589,22 +684,22 @@
 
     <!-- Rumors Section -->
     <section class="reviews-section">
-        <div class="section-header">
+        <div class="section-header reveal">
             <h2 class="section-title">Rumors on the street...</h2>
             <p>What our laboratory fans in Miami are saying</p>
         </div>
         <div class="reviews-grid">
-            <div class="review-card">
+            <div class="review-card reveal">
                 <div class="stars">★★★★★</div>
                 <p class="review-text">"The best cookies I've tried in Miami! The guava and white chocolate one is an absolute madness."</p>
                 <div class="review-author">- Sofia M.</div>
             </div>
-            <div class="review-card">
+            <div class="review-card reveal">
                 <div class="stars">★★★★★</div>
                 <p class="review-text">"The touch of sea salt on the vanilla cookie is perfect. You can taste the freshness in every bite!"</p>
                 <div class="review-author">- Carlos R.</div>
             </div>
-            <div class="review-card">
+            <div class="review-card reveal">
                 <div class="stars">★★★★★</div>
                 <p class="review-text">"The presentation and boxes are gorgeous. It's my favorite gift for any special occasion."</p>
                 <div class="review-author">- Valentina G.</div>
@@ -614,7 +709,7 @@
 
     <!-- Menu Section -->
     <section class="menu-section" id="menu">
-        <div class="menu-container-split">
+        <div class="menu-container-split reveal">
             <div class="menu-content-wrap">
                 <h2>OUR MENU</h2>
                 <p>Discover our complete selection of artisan cookies baked to perfection. Explore all our options and flavors to choose your favorite.</p>
@@ -628,7 +723,7 @@
 
     <!-- Our Story Section -->
     <section class="story-section" id="historia">
-        <div class="story-container">
+        <div class="story-container reveal">
             <div class="story-img-wrap">
                 <img src="images/Monica.png" alt="Monica - The Cookie Lab" class="story-img">
             </div>
@@ -645,24 +740,24 @@
 
     <!-- What's Trending Section -->
     <section class="trending-categories" id="tendencia">
-        <div class="section-header">
+        <div class="section-header reveal">
             <h2 class="section-title">What's trending now</h2>
             <p>Discover the laboratory favorites</p>
         </div>
         <div class="categories-grid">
-            <div class="category-card">
+            <div class="category-card reveal">
                 <img src="images/Galleta1.png" alt="Guava and White Chocolate Cookie">
                 <div class="category-info">
                     <h3>Guava & White Chocolate</h3>
                 </div>
             </div>
-            <div class="category-card">
+            <div class="category-card reveal">
                 <img src="images/Galleta2.png" alt="Vanilla and Sea Salt Cookie">
                 <div class="category-info">
                     <h3>Vanilla & Sea Salt</h3>
                 </div>
             </div>
-            <div class="category-card">
+            <div class="category-card reveal">
                 <img src="images/Galleta3.png" alt="This Month's Special">
                 <div class="category-info">
                     <h3>THIS MONTH’S SPECIAL</h3>
@@ -672,9 +767,9 @@
         </div>
     </section>
 
-    <!-- Place Your Order Section - CORREGIDO A Chef.png -->
+    <!-- Place Your Order Section -->
     <section class="order-section" id="pedidos">
-        <div class="order-container">
+        <div class="order-container reveal">
             <div class="order-img-wrap">
                 <img src="images/Chef.png" alt="Monica in the kitchen">
             </div>
@@ -721,6 +816,25 @@
             if (event.key === "Escape") {
                 closeMenuModal();
             }
+        });
+
+        // Intersection Observer para Scroll Reveal Ultra Fluido
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Dejar de observar una vez animado para mejor rendimiento
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach((el) => {
+            observer.observe(el);
         });
     </script>
 </body>
